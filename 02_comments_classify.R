@@ -14,8 +14,7 @@ classify_comment <- function(comment_text, prompt_template, model) {
   tryCatch({
     chat <- chat_ollama(model = model)
     prompt <- paste0(prompt_template, comment_text)
-    response <- chat$chat(prompt)
-    regmatches(response, regexpr("[01]", response)) # to avoid <|im_sep|> in responses
+    chat$chat(prompt)
   },
   error = function(e) NA_character_
   )
@@ -60,13 +59,19 @@ ageism_prompt <- "Zaklasyfikuj następujący komentarz zamieszczony pod wideo na
 #     cli::cli_alert_success("Done! {n} comments in {round(elapsed['elapsed'], 1)}s ({round(elapsed['elapsed']/n, 1)}s per comment)")
 #   }))
 
-# ageism_comments_test_10 <- classify_with_timing( # output has <|im_sep|>, function updated
+# ageism_comments_test_10 <- classify_with_timing( 
+
 #   df              = comments[1:10, ],
 #   text_col        = "text",
 #   new_col         = "ageism",
 #   prompt_template = ageism_prompt,
 #   model           = bielik_model
 # )
+
+
+# ageism_comments_test_10 output has <|im_sep|>, function updated 
+# but for error handling eventually removed from the function :) 
+# TODO use it for data cleaning regmatches(response, regexpr("[01]", response)) # to avoid <|im_sep|> in responses
 
 ageism_comments_test_20 <- classify_with_timing(
   df              = comments[20:30, ],
