@@ -17,7 +17,7 @@ videolist <- videolist_full %>% filter(videoId %in% c("XVv1RiQ4YVk",
 
 comments_files <- list.files(pattern = "^videoinfo_.*\\.csv$", full.names = TRUE)
 
-comments <- comments_files  %>% 
+comments_na <- comments_files  %>% 
   set_names() %>%
   map(read_csv) %>%
   list_rbind(names_to = "source_file") %>%
@@ -26,6 +26,10 @@ comments <- comments_files  %>%
     .before = 1
   ) %>%
   select(-source_file)
+
+# drop empty comments #### 
+
+comments <- comments_na %>% filter(!is.na(text))
 
 count_comments <- left_join(x = videolist %>% select(videoId, commentCount) %>% arrange(-commentCount), 
           y = comments %>% count(videoId) %>% arrange(-n)) # there are small differences 
