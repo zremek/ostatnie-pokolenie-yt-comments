@@ -90,4 +90,11 @@ ageism_comments <- classify_with_timing(
   new_col         = "ageism",
   prompt_template = ageism_prompt,
   model           = bielik_model
-)
+) #  Done! 30574 comments in 44477.9s (1.5s per comment)
+
+# save.image()
+
+ageism_comments %>% count(ageism) %>% arrange(-n) %>% print(n = 1000)
+
+ageism_comments <- ageism_comments %>% mutate(char_ageism = nchar(ageism))
+summary(ageism_comments$char_ageism)
