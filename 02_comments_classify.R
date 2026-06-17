@@ -155,3 +155,41 @@ role_test_qwen_ageism_comments %>% select(text, ageism) %>%
   filter(ageism == 1) %>% View 
 # quite well but too sensitive for general hate speech, some of them are not ageism
 # TODO update prompt to be more strict to ageism 
+
+ageism_prompt_strict <- "Jesteś klasyfikatorem, zawsze odpowiadasz wyłącznie jedną cyfrą: 1 albo 0. Zaklasyfikuj następujący komentarz zamieszczony pod wideo na YouTube jako wyrażający lub nie wyrażający ageizm, czyli uprzedzenia wobec osoby lub grupy ludzi z uwagi na jej czy ich wiek. Przykładowe wyrażenia wskazujące na ageizm podane są w nawiasie (młodzi odklejeńcy, dzieciaki, gówniarze i narkomani, dzieci do szkoły, stary człowieczek, młody odklejeniec, młody szczoch, stary PRL komuch, chłopcy z piaskownicy, wiekowy człowiek a sieczka w mózgu, młoda idiotka, skretyniałe staruchy, głupie dzieci, 20-letnie dziecko; młode matoły bez przyszłości; gdzie są ich rodzice; współczuję rodzicom tej nieszczęśnicy; małe dzieci; pannica; panienka; dzieciątka; dzidzia)\n. Odpowiedz, podając wyłącznie jedną cyfrę 1, wtedy i tylko wtedy, jeżeli komentarz wyraża ageizm, zgodnie z podaną definicją. Odpowiedz 0, jeżeli tego nie wyraża. Jeżeli komentarz wyraża inne rodzaje mowy nienawiści, ale nie ageism, odpowiedz 0. Nie udzielaj żadnych innych odpowiedzi poza 1 albo 0 ani nie uzasadniaj wykonanej klasyfikacji\n. Komentarz: "
+
+
+role_test_qwen_ageism_comments <- classify_with_timing(
+  df              = role_test_qwen_ageism_comments,
+  text_col        = "text",
+  new_col         = "ageism_strict",
+  prompt_template = ageism_prompt_strict,
+  model           = model_qwen
+) # 
+
+role_test_qwen_ageism_comments <- role_test_qwen_ageism_comments %>%
+  mutate(char_ageism_strict = nchar(ageism_strict))
+summary(role_test_qwen_ageism_comments$char_ageism_strict) # wow 
+
+role_test_qwen_ageism_comments %>% count(ageism_strict)
+
+role_test_qwen_ageism_comments %>% select(text, ageism_strict) %>% 
+  filter(ageism_strict == 1) %>% View 
+
+aps <- "Jesteś klasyfikatorem, zawsze odpowiadasz wyłącznie jedną cyfrą: 1 albo 0. Zaklasyfikuj następujący komentarz zamieszczony pod wideo na YouTube jako wyrażający lub nie wyrażający ageizm, czyli uprzedzenia wobec osoby lub grupy ludzi z uwagi na jej czy ich wiek. Przykładowe wyrażenia wskazujące na ageizm podane są w nawiasie (młodzi odklejeńcy, dzieciaki, gówniarze i narkomani, dzieci do szkoły, stary człowieczek, młody odklejeniec, młody szczoch, stary PRL komuch, chłopcy z piaskownicy, wiekowy człowiek a sieczka w mózgu, młoda idiotka, skretyniałe staruchy, głupie dzieci, 20-letnie dziecko; młode matoły bez przyszłości; gdzie są ich rodzice; współczuję rodzicom tej nieszczęśnicy; małe dzieci; pannica; panienka; dzieciątka; dzidzia)\n. Odpowiedz, podając wyłącznie jedną cyfrę 1, wtedy i tylko wtedy, jeżeli komentarz wyraża ageizm, zgodnie z podaną definicją. Odpowiedz 0, jeżeli tego nie wyraża. Jeżeli komentarz wyraża inne rodzaje mowy nienawiści, ale nie ageizm, odpowiedz 0. Nie udzielaj żadnych innych odpowiedzi poza 1 albo 0 ani nie uzasadniaj wykonanej klasyfikacji\n. Komentarz: "
+
+
+# aps == ageism_prompt_strict # typo ageism / ageizm
+
+# ageism qwen full job #### 
+
+qwen_ageism <- classify_with_timing(
+  df              = comments,
+  text_col        = "text",
+  new_col         = "ageism",
+  prompt_template = aps,
+  model           = model_qwen
+) # Done! 30574 comments in 15257.5s (0.5s per comment)
+
+
+# save.image()
