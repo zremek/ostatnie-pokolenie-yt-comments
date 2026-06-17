@@ -98,3 +98,60 @@ ageism_comments %>% count(ageism) %>% arrange(-n) %>% print(n = 1000)
 
 ageism_comments <- ageism_comments %>% mutate(char_ageism = nchar(ageism))
 summary(ageism_comments$char_ageism)
+
+# smaller model test 
+
+bielik_model_45 <- "SpeakLeash/bielik-4.5b-v3.0-instruct:Q8_0"
+
+test_45_ageism_comments <- classify_with_timing(
+  df              = comments[1000:1050, ],
+  text_col        = "text",
+  new_col         = "ageism",
+  prompt_template = ageism_prompt,
+  model           = bielik_model_45
+) # Done! 51 comments in 92s (1.8s per comment)
+
+# some are extremely long? 
+
+test_45_ageism_comments <- test_45_ageism_comments %>% mutate(char_ageism = nchar(ageism))
+summary(test_45_ageism_comments$char_ageism)
+
+# new prompt start - role for model 
+
+role_ageism_prompt <- paste("Jesteś klasyfikatorem, zawsze odpowiadasz wyłącznie jedną cyfrą: 1 albo 0.", 
+                            ageism_prompt)
+
+
+role_test_45_ageism_comments <- classify_with_timing(
+  df              = comments[1000:1050, ],
+  text_col        = "text",
+  new_col         = "ageism",
+  prompt_template = role_ageism_prompt,
+  model           = bielik_model_45
+) # Done! 51 comments in 54.3s (1.1s per comment)
+
+# some are extremely long? 
+
+role_test_45_ageism_comments <- role_test_45_ageism_comments %>% mutate(char_ageism = nchar(ageism))
+summary(role_test_45_ageism_comments$char_ageism)
+
+
+model_qwen <- "qwen2.5:14b"
+
+role_test_qwen_ageism_comments <- classify_with_timing(
+  df              = comments[1000:1050, ],
+  text_col        = "text",
+  new_col         = "ageism",
+  prompt_template = role_ageism_prompt,
+  model           = model_qwen
+) # Done! 51 comments in 29s (0.6s per comment) / fast! /
+
+role_test_qwen_ageism_comments <- role_test_qwen_ageism_comments %>% mutate(char_ageism = nchar(ageism))
+summary(role_test_qwen_ageism_comments$char_ageism) # wow 
+
+role_test_qwen_ageism_comments %>% count(ageism)
+
+role_test_qwen_ageism_comments %>% select(text, ageism) %>% 
+  filter(ageism == 1) %>% View 
+# quite well but too sensitive for general hate speech, some of them are not ageism
+# TODO update prompt to be more strict to ageism 
