@@ -193,3 +193,19 @@ qwen_ageism <- classify_with_timing(
 
 
 # save.image()
+
+sexism_prompt <- "Jesteś klasyfikatorem, zawsze odpowiadasz wyłącznie jedną cyfrą: 1 albo 0. Zaklasyfikuj następujący komentarz zamieszczony pod wideo na YouTube jako wyrażający lub nie wyrażający seksizm, czyli jawną dewaluację kobiet lub podporządkowywanie kobiet mężczyznom, a także promowanie negatywnych stereotypów dotyczących kobiet. Przykładowe wyrażenia wskazujące na seksizm podane są w nawiasie (blond włosa manipulantka - o mężczyźnie, rozpieszczone cioty, głupie dziewki, współczuję rodzicom, Julka; Julcia; Julia; julka; julcia; julia; Greta; kolejna Greta; osoba aktywistyczna; pannica; panienka; osobopostać; Gretka; dziewczynka; ono; brakuje jej porządnego bolca i dostaje pierdolca; cioty; chłopa jej trzeba; lalunia; srajda; do burdelu; osoby ekologiczne)\n. Odpowiedz, podając wyłącznie jedną cyfrę 1, wtedy i tylko wtedy, jeżeli komentarz wyraża seksizm, zgodnie z podaną definicją. Odpowiedz 0, jeżeli tego nie wyraża. Jeżeli komentarz wyraża inne rodzaje mowy nienawiści, ale nie seksizm, odpowiedz 0. Nie udzielaj żadnych innych odpowiedzi poza 1 albo 0 ani nie uzasadniaj wykonanej klasyfikacji\n. Komentarz: "
+
+
+qwen_sexism <- classify_with_timing(
+  df              = comments,
+  text_col        = "text",
+  new_col         = "sexism",
+  prompt_template = sexism_prompt,
+  model           = model_qwen
+) # Done! 30574 comments in 15775.7s (0.5s per comment)
+
+# save.image()
+
+bodyshaming_prompt <- "Jesteś klasyfikatorem, zawsze odpowiadasz wyłącznie jedną cyfrą: 1 albo 0. Zaklasyfikuj następujący komentarz zamieszczony pod wideo na YouTube jako wyrażający lub nie wyrażający body shaming, czyli nieproszoną, zazwyczaj negatywną opinię o czyimś ciele; intencją osoby wyrażającej opinię nie musi być skrzywdzenie osoby, o której się wypowiada. Przykładowe wyrażenia wskazujące na body shaming podane są w nawiasie (tępa blondyna, co ona ma takie gały, blondi, tłuste włosy; jesteście brzydkie; a w arafatce to po ustach widać, że nie tyko siedzi ale całuje się z asfaltem; tleniony; farbowany)\n. Odpowiedz, podając wyłącznie jedną cyfrę 1, wtedy i tylko wtedy, jeżeli komentarz wyraża body shaming, zgodnie z podaną definicją. Odpowiedz 0, jeżeli tego nie wyraża. Jeżeli komentarz wyraża inne rodzaje mowy nienawiści, ale nie body shaming, odpowiedz 0. Nie udzielaj żadnych innych odpowiedzi poza 1 albo 0 ani nie uzasadniaj wykonanej klasyfikacji\n. Komentarz: "
+
