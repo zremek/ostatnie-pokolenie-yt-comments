@@ -209,3 +209,50 @@ qwen_sexism <- classify_with_timing(
 
 bodyshaming_prompt <- "Jesteś klasyfikatorem, zawsze odpowiadasz wyłącznie jedną cyfrą: 1 albo 0. Zaklasyfikuj następujący komentarz zamieszczony pod wideo na YouTube jako wyrażający lub nie wyrażający body shaming, czyli nieproszoną, zazwyczaj negatywną opinię o czyimś ciele; intencją osoby wyrażającej opinię nie musi być skrzywdzenie osoby, o której się wypowiada. Przykładowe wyrażenia wskazujące na body shaming podane są w nawiasie (tępa blondyna, co ona ma takie gały, blondi, tłuste włosy; jesteście brzydkie; a w arafatce to po ustach widać, że nie tyko siedzi ale całuje się z asfaltem; tleniony; farbowany)\n. Odpowiedz, podając wyłącznie jedną cyfrę 1, wtedy i tylko wtedy, jeżeli komentarz wyraża body shaming, zgodnie z podaną definicją. Odpowiedz 0, jeżeli tego nie wyraża. Jeżeli komentarz wyraża inne rodzaje mowy nienawiści, ale nie body shaming, odpowiedz 0. Nie udzielaj żadnych innych odpowiedzi poza 1 albo 0 ani nie uzasadniaj wykonanej klasyfikacji\n. Komentarz: "
 
+qwen_bodyshaming <- classify_with_timing(
+  df              = comments,
+  text_col        = "text",
+  new_col         = "bodyshaming",
+  prompt_template = bodyshaming_prompt,
+  model           = model_qwen
+) # Done! 30574 comments in 15389.4s (0.5s per comment)
+
+
+# save.image()
+
+insults_prompt <- "Jesteś klasyfikatorem, zawsze odpowiadasz wyłącznie jedną cyfrą: 1 albo 0. Zaklasyfikuj następujący komentarz zamieszczony pod wideo na YouTube jako wyrażający lub nie wyrażający obelgi, czyli wypowiedź intencjonalnie nakierowaną na obrazę osoby, do której się odnosi, poprzez celowe jej poniżanie lub przypisywanie jej cech negatywnych; może odnosić się do cech jednostkowych lub cech ogólnych grupy osób. Przykładowe wyrażenia wskazujące na obelgi podane są w nawiasie (błazny, niepełnosprawni, pojeby, gnoje, pajace, tiktokowe przygłupy, lenie, idioci, pokolenie tępaków, nieroby, banda szumowin, zryte psychiki, nie powinni się rozmnażać, imbecyl, chory umysłowo, oszołomy, niekumaci, puste głowy, badania psychiatryczne, darmozjady, psychiczne nieroby, świry, dziadostwo, hołota, głąby, kanalie, cwaniaki, sztywni uparci, sekciarze, bełkot aktywisty, miernoty, ameby umysłowe, matoły, szambo w głowie, kretynka, hipokrytka, wariatka, hołota, Nawet w Choroszczy nie ma takich pacjentów; chorzy ludzie; kwalifikują się do psychiatry; ułomna umysłowo; Ale Tworki pewnie są pełne takich pensjonariuszy; rozjechany procesor; tacy ludzie chodzą po ulicach bez opieki; mądrość je goniła ale zawsze były szybsze; Świecie, Tworki itd witają; ostatnie odklejenie)\n. Odpowiedz, podając wyłącznie jedną cyfrę 1, wtedy i tylko wtedy, jeżeli komentarz wyraża obelgi, zgodnie z podaną definicją. Odpowiedz 0, jeżeli tego nie wyraża. Jeżeli komentarz wyraża inne rodzaje mowy nienawiści, ale nie obelgi, odpowiedz 0. Nie udzielaj żadnych innych odpowiedzi poza 1 albo 0 ani nie uzasadniaj wykonanej klasyfikacji\n. Komentarz: "
+
+qwen_insults <- classify_with_timing(
+  df              = comments,
+  text_col        = "text",
+  new_col         = "insults",
+  prompt_template = insults_prompt,
+  model           = model_qwen
+) # Done! 30574 comments in 15589.8s (0.5s per comment) 
+
+
+# save.image()
+
+threatsaggression_prompt <- "Jesteś klasyfikatorem, zawsze odpowiadasz wyłącznie jedną cyfrą: 1 albo 0. Zaklasyfikuj następujący komentarz zamieszczony pod wideo na YouTube jako wyrażający lub nie wyrażający groźby/agresję, czyli jawną zapowiedź lub propozycję użycia przemocy fizycznej lub psychicznej; także nawoływanie do przemocy. Przykładowe wyrażenia wskazujące na groźby/agresję podane są w nawiasie (rury wydechowe w ich kierunku, rozjeżdżanie tych terrorystów, przejechać ich, potrącić ich, lać ich, Kubeł z moczem i kałem na łeb, Sprzedać im buta w ryj, potraktować gazem pieprzowym, przywiązać do latarni, duszenie zapaśnicze zrobić, odrąbać grabie, do wora i do wody, pałą ich, pieprzowy gaz, zimna woda, śmierdzący spryskiwacz, stare jaja, niech się wyloguje z życia; naprawdę są ostanim pokoleniem; nie będą się rozmnażać bo są ostatnim pokoleniem; Jak tak patrzę na to ostatnie pokolenie, to jestem za aborcją; powinni siedzieć; 8 lat więzienia to za mało; pokój bez klamek; puścić na nich kibiców zamiast policji; proponuję wiadro butaprenu; Jak się przykleili to można ich też zgwałcić he he; Czy ostatnie pokolenie jest wysterylizowane?; )\n. Odpowiedz, podając wyłącznie jedną cyfrę 1, wtedy i tylko wtedy, jeżeli komentarz wyraża groźby/agresję, zgodnie z podaną definicją. Odpowiedz 0, jeżeli tego nie wyraża. Jeżeli komentarz wyraża inne rodzaje mowy nienawiści, ale nie groźby/agresję, odpowiedz 0. Nie udzielaj żadnych innych odpowiedzi poza 1 albo 0 ani nie uzasadniaj wykonanej klasyfikacji\n. Komentarz: " 
+
+
+qwen_threatsaggression <- classify_with_timing(
+  df              = comments,
+  text_col        = "text",
+  new_col         = "threatsaggression",
+  prompt_template = threatsaggression_prompt,
+  model           = model_qwen
+) # Done! 30574 comments in 17889.6s (0.6s per comment)
+
+# save.image()
+
+dehumanizing_prompt <- "Jesteś klasyfikatorem, zawsze odpowiadasz wyłącznie jedną cyfrą: 1 albo 0. Zaklasyfikuj następujący komentarz zamieszczony pod wideo na YouTube jako wyrażający lub nie wyrażający dehumanizację, czyli określanie ludzi mianem zwierząt lub przedmiotów nieożywionych. Przykładowe wyrażenia wskazujące na dehumanizację podane są w nawiasie (to to, śmieci, szkodniki, łajzy, ścierwa, bezmózgi, ściery, na śmietnik, pasożyci, ścieki nie ludzie, ameby, gówna, odpady, zmanipulowane ameby, cyrk, szczury, dzicz, sekciarstwo, To coś nie nadaje się do życia w społeczeństwie; monstra; to coś; aktywiszcze; mięsne progi zwalniające)\n. Odpowiedz, podając wyłącznie jedną cyfrę 1, wtedy i tylko wtedy, jeżeli komentarz wyraża dehumanizację, zgodnie z podaną definicją. Odpowiedz 0, jeżeli tego nie wyraża. Jeżeli komentarz wyraża inne rodzaje mowy nienawiści, ale nie dehumanizację, odpowiedz 0. Nie udzielaj żadnych innych odpowiedzi poza 1 albo 0 ani nie uzasadniaj wykonanej klasyfikacji\n. Komentarz: "
+
+
+qwen_dehumanizing <- classify_with_timing(
+  df              = comments,
+  text_col        = "text",
+  new_col         = "dehumanizing",
+  prompt_template = dehumanizing_prompt,
+  model           = model_qwen
+) # 
