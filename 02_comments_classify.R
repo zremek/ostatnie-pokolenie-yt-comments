@@ -255,4 +255,7 @@ qwen_dehumanizing <- classify_with_timing(
   new_col         = "dehumanizing",
   prompt_template = dehumanizing_prompt,
   model           = model_qwen
-) # 
+) # Done! 30574 comments in 15227.8s (0.5s per comment)
+
+# save.image()
+
