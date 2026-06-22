@@ -285,4 +285,29 @@ qwen_conspiracy <- classify_with_timing(
   new_col         = "conspiracy",
   prompt_template = conspiracy_prompt,
   model           = model_qwen
-) #
+) # Done! 30574 comments in 19429.8s (0.6s per comment)
+
+
+# save.image()
+
+qwen_political <- classify_with_timing(
+  df              = comments,
+  text_col        = "text",
+  new_col         = "political",
+  prompt_template = political_prompt,
+  model           = model_qwen
+) # Done! 30574 comments in 19423.1s (0.6s per comment)
+
+# save.image()
+
+qwen_criminalization <- classify_with_timing(
+  df              = comments,
+  text_col        = "text",
+  new_col         = "criminalization",
+  prompt_template = criminalization_prompt,
+  model           = model_qwen
+) # Done! 30574 comments in 21315.3s (0.7s per comment)
+
+# save.image()
+
+
