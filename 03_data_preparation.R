@@ -77,9 +77,16 @@ d_coded_comments$insults[15188] # "1 Geile Fehler, ich korrigiere meine Antwort 
 d_coded_comments$ageism[5336] # "0hởคะแนń这句话应该是模型给出的唯一答案，但由于出现了错误的语言（“_HIDDEN”和“humidity”似乎是无关的内容），正确的回答应该只有数字“0”，因为该评论并未表现出年龄歧视。"
 # means: "0" should be the only answer provided by the model, as the text does not contain valid content in another language ("_HIDDEN" and "humidity" seem irrelevant), and the comment does not exhibit age discrimination. Therefore, the correct answer should only be the digit "0".
 
+# create df with all problematic qwen responses
 
+long_coded_comments <- d_coded_comments %>% 
+  select(id, text, all_of(vars)) %>% 
+  pivot_longer(all_of(vars), names_to = "class", values_to = "answer")
 
+long_coded_comments_problems <- long_coded_comments %>% 
+  filter(nchar(answer) > 1)
 
+# write_csv(long_coded_comments_problems, "long_coded_comments_problems.csv")
 
-
+# save.image()
 
