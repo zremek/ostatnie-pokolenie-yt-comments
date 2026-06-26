@@ -90,3 +90,41 @@ long_coded_comments_problems <- long_coded_comments %>%
 
 # save.image()
 
+# from model response first character only #### 
+
+d_coded_comments <- d_coded_comments %>%
+  mutate(across(all_of(vars), ~ str_sub(.x, 1, 1), .names = "{.col}_first"))
+
+
+d_coded_comments %>% 
+  select(ends_with("_first")) %>%
+  sjmisc::frq(min.frq = 0, out = "viewer")
+
+library(sjPlot)
+
+d_coded_comments %>% 
+  mutate(ageism_nchar_1 = ageism_nchar > 1) %>% 
+  sjtab(ageism_first, ageism_nchar_1, 
+        fun = "xtab", show.col.prc = T, 
+        var.labels = c("first char", "nchar > 1"))
+
+
+library(rlang)
+
+for (v in vars) {
+  nchar_col <- sym(paste0(v, "_nchar"))
+  first_col <- sym(paste0(v, "_first"))
+  flag_name <- paste0(v, "_nchar_1")
+  
+  d_temp <- d_coded_comments %>%
+    mutate(!!flag_name := !!nchar_col > 1)
+  
+  print(
+    sjtab(d_temp, !!first_col, !!sym(flag_name),
+          fun = "xtab", show.col.prc = TRUE,
+          var.labels = c("first char", "nchar > 1"),
+          title = v)
+  )
+}
+
+
