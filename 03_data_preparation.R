@@ -109,22 +109,45 @@ d_coded_comments %>%
         var.labels = c("first char", "nchar > 1"))
 
 
-library(rlang)
+d_coded_comments <- d_coded_comments %>%
+  mutate(across(all_of(paste0(vars, "_nchar")), ~ .x > 1, .names = "{.col}_1"))
+
+library(janitor)
 
 for (v in vars) {
-  nchar_col <- sym(paste0(v, "_nchar"))
-  first_col <- sym(paste0(v, "_first"))
-  flag_name <- paste0(v, "_nchar_1")
+  first_col <- paste0(v, "_first")
+  flag_col  <- paste0(v, "_nchar_1")
   
-  d_temp <- d_coded_comments %>%
-    mutate(!!flag_name := !!nchar_col > 1)
-  
-  print(
-    sjtab(d_temp, !!first_col, !!sym(flag_name),
-          fun = "xtab", show.col.prc = TRUE,
-          var.labels = c("first char", "nchar > 1"),
-          title = v)
-  )
-}
+  cat("\n===", v, "===\n")
+  d_coded_comments %>%
+    tabyl(!!sym(first_col), !!sym(flag_col)) %>%
+    adorn_percentages("col") %>%
+    adorn_pct_formatting() %>%
+    print()
+} 
+# at most 22.2% of nchar > 1 were flag "1" on first character /insults/
+# ~80-90% of them were flag "0"
+
+d_coded_comments %>% 
+  select(ageism_first:threatsaggression_first) %>% 
+  plot_stackfrq(sort.frq = "first.asc", 
+                expand.grid = T, 
+                show.total = F)
 
 
+
+library(ggcorrplot)
+
+first_vars <- d_coded_comments %>%
+  select(paste0(vars, "_first")) %>%
+  mutate(across(everything(), as.numeric))
+
+cor_matrix <- cor(first_vars, use = "pairwise.complete.obs")
+
+ggcorrplot(cor_matrix, 
+           lab = TRUE,
+           type = "upper",
+           colors = c("blue", "white", "red"))
+
+
+# save.image()
