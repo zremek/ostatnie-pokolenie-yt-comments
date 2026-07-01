@@ -2,7 +2,7 @@ library(tidyverse)
 library(arules)
 library(arulesViz)
 
-load(".RData")
+# load(".RData")
 
 bin_first <- first_vars %>%
   mutate(across(everything(), as.logical)) %>%

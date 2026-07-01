@@ -151,3 +151,17 @@ ggcorrplot(cor_matrix,
 
 
 # save.image()
+
+d_coded_comments <- 
+d_coded_comments |> 
+  mutate(across(ends_with("_first"), as.numeric, .names = "{.col}_num"))
+
+d_coded_comments$count_codes <- rowSums(d_coded_comments[, 64:73])
+summary(d_coded_comments$count_codes)
+sjmisc::frq(d_coded_comments$count_codes)
+
+# write_csv(x = d_coded_comments |> 
+#             select(videoId, id, text, ends_with("_first"), count_codes), 
+#           file = "coded_comments_first.csv")
+
+
